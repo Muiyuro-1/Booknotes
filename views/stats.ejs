@@ -1,0 +1,167 @@
+<%- include('partials/header') %>
+
+<div class="stats-page">
+  <div class="stats-header">
+    <div>
+      <h1 class="stats-title">📊 Your Dashboard</h1>
+      <p class="stats-sub">A snapshot of your reading & watching life.</p>
+    </div>
+    <a href="/reviews/new" class="btn-primary">+ Add Review</a>
+  </div>
+
+  <!-- Overview cards -->
+  <div class="overview-grid">
+    <div class="overview-card">
+      <span class="overview-icon">📚</span>
+      <span class="overview-num"><%= overview.books %></span>
+      <span class="overview-label">Books Read</span>
+      <span class="overview-sub">Avg <%= overview.avg_book_rating || '—' %>/10</span>
+    </div>
+    <div class="overview-card">
+      <span class="overview-icon">🎬</span>
+      <span class="overview-num"><%= overview.movies %></span>
+      <span class="overview-label">Movies Watched</span>
+      <span class="overview-sub">Avg <%= overview.avg_movie_rating || '—' %>/10</span>
+    </div>
+    <div class="overview-card">
+      <span class="overview-icon">⭐</span>
+      <span class="overview-num"><%= overview.favorites %></span>
+      <span class="overview-label">Favorites</span>
+      <span class="overview-sub">Top picks</span>
+    </div>
+    <div class="overview-card">
+      <span class="overview-icon">🔖</span>
+      <span class="overview-num"><%= overview.want_to %></span>
+      <span class="overview-label">Want To</span>
+      <span class="overview-sub"><%= overview.in_progress %> in progress</span>
+    </div>
+    <div class="overview-card overview-card-accent">
+      <span class="overview-icon">📈</span>
+      <span class="overview-num"><%= overview.avg_rating || '—' %></span>
+      <span class="overview-label">Overall Avg Rating</span>
+      <span class="overview-sub"><%= overview.total %> total reviews</span>
+    </div>
+  </div>
+
+  <div class="stats-two-col">
+    <!-- Rating Distribution -->
+    <div class="stats-card">
+      <h2 class="stats-card-title">Rating Distribution</h2>
+      <% const maxCount = ratingDist.length ? Math.max(...ratingDist.map(r => parseInt(r.count))) : 1; %>
+      <% const ratingMap = {}; ratingDist.forEach(r => ratingMap[r.rating] = r.count); %>
+      <div class="rating-dist">
+        <% for(let i = 10; i >= 1; i--) { %>
+          <% const cnt = parseInt(ratingMap[i] || 0); %>
+          <% const pct = maxCount > 0 ? Math.round((cnt / maxCount) * 100) : 0; %>
+          <div class="dist-row">
+            <span class="dist-label"><%= i %> ★</span>
+            <div class="dist-bar-wrap">
+              <div class="dist-bar" style="width:<%= pct %>%"
+                data-rating="<%= i %>"></div>
+            </div>
+            <span class="dist-count"><%= cnt %></span>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Top Genres -->
+    <div class="stats-card">
+      <h2 class="stats-card-title">Top Genres</h2>
+      <% if (genreStats.length === 0) { %>
+        <p class="stats-empty">No genres logged yet.</p>
+      <% } else { %>
+        <% const maxGenre = Math.max(...genreStats.map(g => parseInt(g.count))); %>
+        <div class="genre-list">
+          <% genreStats.forEach((g, i) => { %>
+            <div class="genre-row">
+              <span class="genre-rank">#<%= i+1 %></span>
+              <span class="genre-name"><%= g.genre %></span>
+              <div class="genre-bar-wrap">
+                <div class="genre-bar" style="width:<%= Math.round((g.count/maxGenre)*100) %>%"></div>
+              </div>
+              <span class="genre-meta"><%= g.count %> · <%= g.avg_rating %>/10</span>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Activity Timeline -->
+  <% if (timeline.length > 0) { %>
+  <div class="stats-card stats-card-wide">
+    <h2 class="stats-card-title">Activity (Last 12 Months)</h2>
+    <div class="timeline-chart">
+      <% const maxMonth = Math.max(...timeline.map(t => parseInt(t.count))); %>
+      <% timeline.forEach(t => { %>
+        <div class="timeline-col">
+          <span class="timeline-count"><%= t.count %></span>
+          <div class="timeline-bar-wrap">
+            <div class="timeline-bar"
+              style="height:<%= maxMonth > 0 ? Math.round((t.count/maxMonth)*100) : 0 %>%"></div>
+          </div>
+          <span class="timeline-label"><%= t.month %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Top Rated -->
+  <% if (topRated.length > 0) { %>
+  <div class="stats-card stats-card-wide">
+    <h2 class="stats-card-title">⭐ Top Rated (9–10)</h2>
+    <div class="top-rated-grid">
+      <% topRated.forEach(r => { %>
+        <a href="/reviews/<%= r.id %>" class="top-rated-item">
+          <% if (r.cover_url) { %>
+            <img class="top-rated-cover" src="<%= r.cover_url %>" alt="<%= r.title %>">
+          <% } else { %>
+            <div class="top-rated-placeholder"><%= r.type === 'book' ? '📖' : '🎥' %></div>
+          <% } %>
+          <div class="top-rated-info">
+            <span class="top-rated-title"><%= r.title %></span>
+            <span class="top-rated-meta"><%= r.type === 'book' ? '📚' : '🎬' %> <%= r.year || '' %></span>
+            <span class="top-rated-score">★ <%= r.rating %>/10</span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Recent Activity -->
+  <div class="stats-card stats-card-wide">
+    <div class="stats-card-header">
+      <h2 class="stats-card-title">🕐 Recently Added</h2>
+      <a href="/" class="stats-card-link">View all →</a>
+    </div>
+    <% if (recentActivity.length === 0) { %>
+      <p class="stats-empty">Nothing added yet. <a href="/reviews/new">Add your first review →</a></p>
+    <% } else { %>
+      <div class="recent-list">
+        <% recentActivity.forEach(r => { %>
+          <a href="/reviews/<%= r.id %>" class="recent-item">
+            <div class="recent-icon"><%= r.type === 'book' ? '📚' : '🎬' %></div>
+            <div class="recent-info">
+              <span class="recent-title"><%= r.title %></span>
+              <span class="recent-meta">
+                <%= r.author_director || '' %>
+                <% if (r.genre) { %> · <%= r.genre %><% } %>
+              </span>
+            </div>
+            <div class="recent-right">
+              <% if (r.rating) { %><span class="recent-rating">★ <%= r.rating %></span><% } %>
+              <span class="recent-date">
+                <%= new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) %>
+              </span>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

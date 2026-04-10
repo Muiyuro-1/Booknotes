@@ -1,0 +1,159 @@
+<%- include('partials/header') %>
+
+<% if (currentUser) { %>
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Hello, <em><%= currentUser.username %></em> 👋</h1>
+    <p class="hero-sub">Your personal reading & watching journal.</p>
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num"><%= stats.total %></span>
+      <span class="stat-label">Reviews</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.books %></span>
+      <span class="stat-label">Books</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.movies %></span>
+      <span class="stat-label">Movies</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.favorites %></span>
+      <span class="stat-label">Favorites</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.avg_rating || '—' %></span>
+      <span class="stat-label">Avg Rating</span>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<div class="hero hero-guest">
+  <div class="hero-content">
+    <h1 class="hero-title">Track Every <em>Book</em><br>& Movie You Love</h1>
+    <p class="hero-sub">Your personal journal for reviews, ratings and notes.</p>
+    <div class="hero-actions">
+      <a href="/auth/register" class="btn-primary">Start for Free →</a>
+      <a href="/auth/login" class="btn-ghost">Sign In</a>
+    </div>
+  </div>
+</div>
+<% } %>
+
+<% if (currentUser) { %>
+<div class="controls-bar">
+  <form class="search-form" method="GET" action="/">
+    <input type="hidden" name="filter" value="<%= filter %>">
+    <input type="hidden" name="sort" value="<%= sort %>">
+    <input type="hidden" name="status" value="<%= status %>">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" name="search"
+        placeholder="Search titles, authors, genres…" value="<%= search %>">
+      <% if (search) { %>
+        <a href="/?filter=<%= filter %>&sort=<%= sort %>&status=<%= status %>" class="search-clear">×</a>
+      <% } %>
+    </div>
+  </form>
+
+  <div class="filter-group">
+    <a href="/?filter=all&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
+      class="filter-btn <%= filter === 'all' ? 'active' : '' %>">All</a>
+    <a href="/?filter=book&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
+      class="filter-btn <%= filter === 'book' ? 'active' : '' %>">📚 Books</a>
+    <a href="/?filter=movie&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
+      class="filter-btn <%= filter === 'movie' ? 'active' : '' %>">🎬 Movies</a>
+  </div>
+
+  <div class="filter-group">
+    <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=all"
+      class="filter-btn <%= status === 'all' ? 'active' : '' %>">All Status</a>
+    <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=completed"
+      class="filter-btn <%= status === 'completed' ? 'active' : '' %>">✅ Done</a>
+    <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=in_progress"
+      class="filter-btn <%= status === 'in_progress' ? 'active' : '' %>">⏳ Reading</a>
+    <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=want_to"
+      class="filter-btn <%= status === 'want_to' ? 'active' : '' %>">🔖 Want To</a>
+  </div>
+
+  <div class="sort-group">
+    <label class="sort-label">Sort:</label>
+    <select class="sort-select"
+      onchange="window.location.href='/?filter=<%= filter %>&sort='+this.value+'&search=<%= search %>&status=<%= status %>'">
+      <option value="newest"  <%= sort === 'newest'  ? 'selected' : '' %>>Newest</option>
+      <option value="rating"  <%= sort === 'rating'  ? 'selected' : '' %>>Top Rated</option>
+      <option value="title"   <%= sort === 'title'   ? 'selected' : '' %>>A–Z</option>
+    </select>
+  </div>
+</div>
+
+<% if (reviews.length === 0) { %>
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h3>Nothing here yet</h3>
+    <p><%= search ? `No results for "${search}"` : 'Add your first book or movie review.' %></p>
+    <a href="/reviews/new" class="btn-primary">+ Add Review</a>
+  </div>
+<% } else { %>
+  <div class="cards-grid">
+    <% reviews.forEach(review => { %>
+      <a href="/reviews/<%= review.id %>" class="card" data-type="<%= review.type %>">
+        <% if (review.favorite) { %>
+          <span class="card-fav-badge">⭐</span>
+        <% } %>
+        <div class="card-type-badge <%= review.type %>">
+          <%= review.type === 'book' ? '📚 Book' : '🎬 Movie' %>
+        </div>
+
+        <% if (review.cover_url) { %>
+          <div class="card-cover">
+            <img src="<%= review.cover_url %>" alt="<%= review.title %>" loading="lazy">
+          </div>
+        <% } else { %>
+          <div class="card-cover-placeholder">
+            <%= review.type === 'book' ? '📖' : '🎥' %>
+          </div>
+        <% } %>
+
+        <div class="card-body">
+          <h3 class="card-title"><%= review.title %></h3>
+          <p class="card-meta">
+            <% if (review.author_director) { %>
+              <span><%= review.type === 'book' ? 'by' : 'dir.' %> <%= review.author_director %></span>
+            <% } %>
+            <% if (review.year) { %><span class="card-year"><%= review.year %></span><% } %>
+          </p>
+          <div class="card-tags">
+            <% if (review.genre) { %><span class="card-genre"><%= review.genre %></span><% } %>
+            <span class="card-status status-<%= review.status %>">
+              <%= review.status === 'completed' ? '✅' : review.status === 'in_progress' ? '⏳' : '🔖' %>
+              <%= review.status === 'want_to' ? 'Want To' : review.status === 'in_progress' ? 'In Progress' : 'Done' %>
+            </span>
+          </div>
+          <% if (review.rating) { %>
+            <div class="card-rating">
+              <span class="rating-stars">
+                <% for(let i = 1; i <= 10; i++) { %>
+                  <span class="star <%= i <= review.rating ? 'filled' : '' %>">★</span>
+                <% } %>
+              </span>
+              <span class="rating-num"><%= review.rating %>/10</span>
+            </div>
+          <% } %>
+          <% if (review.review) { %>
+            <p class="card-excerpt"><%= review.review.substring(0, 90) %><%= review.review.length > 90 ? '…' : '' %></p>
+          <% } %>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+<% } %>
+
+<%- include('partials/footer') %>

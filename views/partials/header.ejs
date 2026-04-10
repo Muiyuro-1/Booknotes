@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-logo">
+      <span class="logo-icon">📖</span>
+      <span class="logo-text">BookNotes</span>
+    </a>
+
+    <div class="nav-links">
+      <% if (currentUser) { %>
+        <a href="/" class="nav-link">Journal</a>
+        <a href="/stats" class="nav-link">Dashboard</a>
+        <a href="/reviews/new" class="nav-cta">+ Add Review</a>
+        <div class="user-menu">
+          <button class="user-avatar-btn" id="userMenuBtn"
+            style="--avatar-color:<%= currentUser.avatar_color %>">
+            <%= currentUser.username.charAt(0).toUpperCase() %>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong><%= currentUser.username %></strong>
+              <span><%= currentUser.email %></span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <a href="/" class="user-dropdown-item">📚 My Journal</a>
+            <a href="/stats" class="user-dropdown-item">📊 Dashboard</a>
+            <div class="user-dropdown-divider"></div>
+            <form method="POST" action="/auth/logout">
+              <button type="submit" class="user-dropdown-item user-dropdown-logout">🚪 Sign Out</button>
+            </form>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/auth/login" class="nav-link">Sign In</a>
+        <a href="/auth/register" class="nav-cta">Get Started</a>
+      <% } %>
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+    </div>
+  </nav>
+
+  <% if (flash && (flash.success?.length || flash.error?.length)) { %>
+    <div class="flash-bar">
+      <% if (flash.success?.length) { %>
+        <div class="flash flash-success">✓ <%= flash.success[0] %>
+          <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+      <% } %>
+      <% if (flash.error?.length) { %>
+        <div class="flash flash-error">⚠️ <%= flash.error[0] %>
+          <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+
+  <main class="main-content">

@@ -1,0 +1,126 @@
+<%- include('partials/header') %>
+
+<div class="form-page">
+  <div class="form-back">
+    <a href="<%= review ? `/reviews/${review.id}` : '/' %>" class="back-link">← Back</a>
+  </div>
+
+  <div class="form-card">
+    <h1 class="form-title"><%= review ? '✏️ Edit Review' : '✨ Add New Review' %></h1>
+    <p class="form-subtitle"><%= review ? 'Update your thoughts.' : "Log a book or movie you've experienced." %></p>
+
+    <form method="POST" action="<%= action %>" class="review-form">
+
+      <!-- Type Toggle -->
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <div class="type-toggle">
+          <label class="type-option">
+            <input type="radio" name="type" value="book" <%= (!review || review.type === 'book') ? 'checked' : '' %>>
+            <span class="type-pill">📚 Book</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="type" value="movie" <%= (review && review.type === 'movie') ? 'checked' : '' %>>
+            <span class="type-pill">🎬 Movie</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group form-span-2">
+          <label class="form-label" for="title">Title <span class="required">*</span></label>
+          <input class="form-input" type="text" id="title" name="title"
+            value="<%= review ? review.title : '' %>" placeholder="Enter title…" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="author_director" id="author-label">
+            <%= (review && review.type === 'movie') ? 'Director' : 'Author' %>
+          </label>
+          <input class="form-input" type="text" id="author_director" name="author_director"
+            value="<%= review ? (review.author_director || '') : '' %>" placeholder="Name…">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="genre">Genre</label>
+          <input class="form-input" type="text" id="genre" name="genre"
+            value="<%= review ? (review.genre || '') : '' %>" placeholder="e.g. Fiction, Sci-Fi…">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="year">Year</label>
+          <input class="form-input" type="number" id="year" name="year"
+            value="<%= review ? (review.year || '') : '' %>" placeholder="e.g. 2023" min="1800" max="2099">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="status">Status</label>
+          <select class="form-input" id="status" name="status">
+            <option value="completed"   <%= (!review || review.status === 'completed')   ? 'selected' : '' %>>✅ Completed</option>
+            <option value="in_progress" <%= (review && review.status === 'in_progress')  ? 'selected' : '' %>>⏳ In Progress</option>
+            <option value="want_to"     <%= (review && review.status === 'want_to')       ? 'selected' : '' %>>🔖 Want To</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rating">Rating (1–10)</label>
+          <div class="rating-input-wrap">
+            <input class="rating-range" type="range" id="rating" name="rating"
+              min="1" max="10" value="<%= review ? (review.rating || 7) : 7 %>" oninput="updateRating(this.value)">
+            <span class="rating-display" id="ratingDisplay"><%= review ? (review.rating || 7) : 7 %></span>
+          </div>
+        </div>
+
+        <!-- Cover URL + auto-fetch -->
+        <div class="form-group form-span-2">
+          <label class="form-label" for="cover_url">Cover Image URL</label>
+          <div class="cover-input-row">
+            <input class="form-input" type="url" id="cover_url" name="cover_url"
+              value="<%= review ? (review.cover_url || '') : '' %>" placeholder="https://… or use auto-fetch →">
+            <button type="button" class="btn-fetch" id="fetchCoverBtn" title="Auto-fetch cover art">
+              🔍 Auto-fetch
+            </button>
+          </div>
+          <div id="coverPreview" class="cover-preview" style="display:<%= (review && review.cover_url) ? 'block' : 'none' %>">
+            <% if (review && review.cover_url) { %>
+              <img id="coverImg" src="<%= review.cover_url %>" alt="Cover preview">
+            <% } else { %>
+              <img id="coverImg" src="" alt="Cover preview">
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group form-span-2">
+          <label class="form-label" for="review">Review</label>
+          <textarea class="form-textarea" id="review" name="review" rows="5"
+            placeholder="Share your thoughts…"><%= review ? (review.review || '') : '' %></textarea>
+        </div>
+
+        <div class="form-group form-span-2">
+          <label class="form-label" for="notes">Personal Notes</label>
+          <textarea class="form-textarea" id="notes" name="notes" rows="3"
+            placeholder="Key takeaways, quotes, things to remember…"><%= review ? (review.notes || '') : '' %></textarea>
+        </div>
+
+        <!-- Favorite toggle -->
+        <div class="form-group">
+          <label class="form-label">Mark as Favorite</label>
+          <label class="toggle-wrap">
+            <input type="checkbox" name="favorite" id="favorite" <%= (review && review.favorite) ? 'checked' : '' %>>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">⭐ Favorite</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="<%= review ? `/reviews/${review.id}` : '/' %>" class="btn-ghost">Cancel</a>
+        <button type="submit" class="btn-primary">
+          <%= review ? '💾 Save Changes' : '+ Add Review' %>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

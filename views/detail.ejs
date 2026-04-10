@@ -1,0 +1,104 @@
+<%- include('partials/header') %>
+
+<div class="detail-page">
+  <div class="detail-back">
+    <a href="/" class="back-link">← Back to journal</a>
+  </div>
+
+  <div class="detail-hero">
+    <div class="detail-cover">
+      <% if (review.cover_url) { %>
+        <img src="<%= review.cover_url %>" alt="<%= review.title %>">
+      <% } else { %>
+        <div class="detail-cover-placeholder">
+          <%= review.type === 'book' ? '📖' : '🎥' %>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="detail-info">
+      <div class="detail-badges">
+        <span class="detail-badge <%= review.type %>">
+          <%= review.type === 'book' ? '📚 Book' : '🎬 Movie' %>
+        </span>
+        <span class="detail-badge status-badge status-<%= review.status %>">
+          <%= review.status === 'completed' ? '✅ Completed' : review.status === 'in_progress' ? '⏳ In Progress' : '🔖 Want To' %>
+        </span>
+        <% if (review.favorite) { %><span class="detail-badge fav-badge">⭐ Favorite</span><% } %>
+      </div>
+
+      <h1 class="detail-title"><%= review.title %></h1>
+
+      <div class="detail-meta">
+        <% if (review.author_director) { %>
+          <div class="meta-item">
+            <span class="meta-icon"><%= review.type === 'book' ? '✍️' : '🎬' %></span>
+            <span><%= review.type === 'book' ? 'Author' : 'Director' %>: <strong><%= review.author_director %></strong></span>
+          </div>
+        <% } %>
+        <% if (review.year) { %>
+          <div class="meta-item">
+            <span class="meta-icon">📅</span>
+            <span>Year: <strong><%= review.year %></strong></span>
+          </div>
+        <% } %>
+        <% if (review.genre) { %>
+          <div class="meta-item">
+            <span class="meta-icon">🏷️</span>
+            <span>Genre: <strong><%= review.genre %></strong></span>
+          </div>
+        <% } %>
+      </div>
+
+      <% if (review.rating) { %>
+        <div class="detail-rating">
+          <div class="rating-stars-large">
+            <% for(let i = 1; i <= 10; i++) { %>
+              <span class="star-lg <%= i <= review.rating ? 'filled' : '' %>">★</span>
+            <% } %>
+          </div>
+          <span class="rating-score"><%= review.rating %><span class="rating-max">/10</span></span>
+        </div>
+      <% } %>
+
+      <div class="detail-actions">
+        <button class="btn-fav <%= review.favorite ? 'fav-active' : '' %>"
+          id="favBtn" data-id="<%= review.id %>"
+          title="<%= review.favorite ? 'Remove from favorites' : 'Add to favorites' %>">
+          <%= review.favorite ? '⭐ Favorited' : '☆ Favorite' %>
+        </button>
+        <a href="/reviews/<%= review.id %>/edit" class="btn-secondary">✏️ Edit</a>
+        <form method="POST" action="/reviews/<%= review.id %>?_method=DELETE"
+          onsubmit="return confirm('Delete this review permanently?')">
+          <button type="submit" class="btn-danger">🗑️ Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <% if (review.review || review.notes) { %>
+    <div class="detail-content">
+      <% if (review.review) { %>
+        <div class="detail-section">
+          <h2 class="section-title">📝 My Review</h2>
+          <div class="section-text"><%= review.review %></div>
+        </div>
+      <% } %>
+      <% if (review.notes) { %>
+        <div class="detail-section notes-section">
+          <h2 class="section-title">💡 Personal Notes</h2>
+          <div class="section-text notes-text"><%= review.notes %></div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+
+  <div class="detail-footer-meta">
+    <span>Added: <%= new Date(review.created_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) %></span>
+    <% if (new Date(review.updated_at) > new Date(review.created_at)) { %>
+      <span>Updated: <%= new Date(review.updated_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) %></span>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

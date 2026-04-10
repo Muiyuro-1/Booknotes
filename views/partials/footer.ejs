@@ -1,0 +1,13 @@
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo">📖 BookNotes</span>
+      <span class="footer-text">Your personal reading & watching journal</span>
+      <% if (currentUser) { %>
+        <span class="footer-text">Logged in as <strong><%= currentUser.username %></strong></span>
+      <% } %>
+    </div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

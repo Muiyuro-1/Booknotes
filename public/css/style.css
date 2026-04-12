@@ -1387,3 +1387,139 @@ a { text-decoration: none; color: inherit; }
 .overview-card:nth-child(3) { animation-delay: 0.15s; }
 .overview-card:nth-child(4) { animation-delay: 0.20s; }
 .overview-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ── Guest Hero Visual ────────────────────── */
+.hero-guest {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  min-height: calc(100vh - 68px - 80px);
+  padding: 2rem 0;
+}
+
+.hero-trust {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.hero-trust span {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ── Floating Cards Visual ────────────────── */
+.hero-visual {
+  position: relative;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-cards {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.float-card {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0.9rem 1.1rem;
+  box-shadow: var(--shadow-hover);
+  width: 240px;
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+.float-card-1 {
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+  animation-duration: 6s;
+}
+.float-card-2 {
+  top: 30%;
+  right: 0%;
+  animation-delay: 1.5s;
+  animation-duration: 7s;
+}
+.float-card-3 {
+  bottom: 25%;
+  left: 8%;
+  animation-delay: 3s;
+  animation-duration: 6.5s;
+}
+.float-card-4 {
+  bottom: 8%;
+  right: 5%;
+  animation-delay: 0.8s;
+  animation-duration: 5.5s;
+}
+
+.fc-icon { font-size: 1.8rem; flex-shrink: 0; }
+.fc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.fc-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fc-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.fc-stars {
+  font-size: 0.6rem;
+  color: #f59e0b;
+  letter-spacing: 1px;
+}
+
+/* Floating badges */
+.hero-badge {
+  position: absolute;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(56,189,248,0.4);
+  animation: floatCard 5s ease-in-out infinite;
+  white-space: nowrap;
+}
+.hero-badge-1 { top: 5%;   right: 25%; animation-delay: 2s;   animation-duration: 5s; }
+.hero-badge-2 { top: 55%;  left: 0%;   animation-delay: 0.5s; animation-duration: 6s; }
+.hero-badge-3 { bottom: 15%; right: 20%; animation-delay: 3.5s; animation-duration: 4.5s; }
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-10px) rotate(0.5deg); }
+  66%       { transform: translateY(-5px) rotate(-0.5deg); }
+}
+
+/* Responsive — stack on mobile */
+@media (max-width: 768px) {
+  .hero-guest {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    text-align: center;
+  }
+  .hero-visual { display: none; }
+  .hero-trust { justify-content: center; }
+  .hero-actions { justify-content: center; }
+}

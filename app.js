@@ -70,13 +70,22 @@ app.use('/api',     apiRouter);
 
 // ── 404
 app.use((req, res) => {
-  res.status(404).render('404', { title: '404 — Not Found' });
+  res.status(404).render('404', {
+    title: '404 — Not Found',
+    currentUser: req.user || null,
+    flash: { success: [], error: [] },
+  });
 });
 
 // ── Error
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('error', { title: 'Error', error: err.message });
+  res.status(500).render('error', {
+    title: 'Error',
+    error: err.message,
+    currentUser: req.user || null,
+    flash: { success: [], error: [] },
+  });
 });
 
 app.listen(PORT, () => {

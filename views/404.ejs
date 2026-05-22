@@ -1,8 +1,20 @@
 <%- include('partials/header') %>
+
 <div class="error-page">
-  <div class="error-icon">📭</div>
-  <h1>404</h1>
-  <p>This page doesn't exist.</p>
-  <a href="/" class="btn-primary">Go Home</a>
+  <svg class="icon-xl" style="width:64px;height:64px;color:var(--subtle);margin:0 auto 1.25rem;display:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+  <h1 class="error-code">404</h1>
+  <p class="error-sub">This page doesn't exist.</p>
+  <a href="/" class="btn-primary">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Go Home
+  </a>
 </div>
+
 <%- include('partials/footer') %>

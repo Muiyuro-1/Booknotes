@@ -2,12 +2,20 @@
 
 <div class="form-page">
   <div class="form-back">
-    <a href="<%= review ? `/reviews/${review.id}` : '/' %>" class="back-link">← Back</a>
+    <a href="<%= review ? `/reviews/${review.id}` : '/' %>" class="back-link">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back
+    </a>
   </div>
 
   <div class="form-card">
-    <h1 class="form-title"><%= review ? '✏️ Edit Review' : '✨ Add New Review' %></h1>
-    <p class="form-subtitle"><%= review ? 'Update your thoughts.' : "Log a book or movie you've experienced." %></p>
+    <div class="form-header">
+      <h1 class="form-title"><%= review ? 'Edit Review' : 'Add New Review' %></h1>
+      <p class="form-sub"><%= review ? 'Update your thoughts and rating.' : "Log a book or movie you've experienced." %></p>
+    </div>
 
     <form method="POST" action="<%= action %>" class="review-form">
 
@@ -17,11 +25,23 @@
         <div class="type-toggle">
           <label class="type-option">
             <input type="radio" name="type" value="book" <%= (!review || review.type === 'book') ? 'checked' : '' %>>
-            <span class="type-pill">📚 Book</span>
+            <span class="type-pill">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              Book
+            </span>
           </label>
           <label class="type-option">
             <input type="radio" name="type" value="movie" <%= (review && review.type === 'movie') ? 'checked' : '' %>>
-            <span class="type-pill">🎬 Movie</span>
+            <span class="type-pill">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/>
+                <line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>
+              </svg>
+              Movie
+            </span>
           </label>
         </div>
       </div>
@@ -50,23 +70,24 @@
         <div class="form-group">
           <label class="form-label" for="year">Year</label>
           <input class="form-input" type="number" id="year" name="year"
-            value="<%= review ? (review.year || '') : '' %>" placeholder="e.g. 2023" min="1800" max="2099">
+            value="<%= review ? (review.year || '') : '' %>" placeholder="e.g. 2024" min="1800" max="2099">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="status">Status</label>
-          <select class="form-input" id="status" name="status">
-            <option value="completed"   <%= (!review || review.status === 'completed')   ? 'selected' : '' %>>✅ Completed</option>
-            <option value="in_progress" <%= (review && review.status === 'in_progress')  ? 'selected' : '' %>>⏳ In Progress</option>
-            <option value="want_to"     <%= (review && review.status === 'want_to')       ? 'selected' : '' %>>🔖 Want To</option>
+          <select class="form-input form-select" id="status" name="status">
+            <option value="completed"   <%= (!review || review.status === 'completed')   ? 'selected' : '' %>>Completed</option>
+            <option value="in_progress" <%= (review && review.status === 'in_progress')  ? 'selected' : '' %>>In Progress</option>
+            <option value="want_to"     <%= (review && review.status === 'want_to')       ? 'selected' : '' %>>Want To</option>
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group form-span-2">
           <label class="form-label" for="rating">Rating (1–10)</label>
           <div class="rating-input-wrap">
             <input class="rating-range" type="range" id="rating" name="rating"
-              min="1" max="10" value="<%= review ? (review.rating || 7) : 7 %>" oninput="updateRating(this.value)">
+              min="1" max="10" value="<%= review ? (review.rating || 7) : 7 %>"
+              oninput="updateRating(this.value)">
             <span class="rating-display" id="ratingDisplay"><%= review ? (review.rating || 7) : 7 %></span>
           </div>
         </div>
@@ -76,17 +97,18 @@
           <label class="form-label" for="cover_url">Cover Image URL</label>
           <div class="cover-input-row">
             <input class="form-input" type="url" id="cover_url" name="cover_url"
-              value="<%= review ? (review.cover_url || '') : '' %>" placeholder="https://… or use auto-fetch →">
+              value="<%= review ? (review.cover_url || '') : '' %>"
+              placeholder="https://… or use auto-fetch">
             <button type="button" class="btn-fetch" id="fetchCoverBtn" title="Auto-fetch cover art">
-              🔍 Auto-fetch
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              Auto-fetch
             </button>
           </div>
-          <div id="coverPreview" class="cover-preview" style="display:<%= (review && review.cover_url) ? 'block' : 'none' %>">
-            <% if (review && review.cover_url) { %>
-              <img id="coverImg" src="<%= review.cover_url %>" alt="Cover preview">
-            <% } else { %>
-              <img id="coverImg" src="" alt="Cover preview">
-            <% } %>
+          <div id="coverPreview" class="cover-preview"
+            style="display:<%= (review && review.cover_url) ? 'block' : 'none' %>">
+            <img id="coverImg" src="<%= review ? (review.cover_url || '') : '' %>" alt="Cover preview">
           </div>
         </div>
 
@@ -102,13 +124,18 @@
             placeholder="Key takeaways, quotes, things to remember…"><%= review ? (review.notes || '') : '' %></textarea>
         </div>
 
-        <!-- Favorite toggle -->
         <div class="form-group">
           <label class="form-label">Mark as Favorite</label>
           <label class="toggle-wrap">
-            <input type="checkbox" name="favorite" id="favorite" <%= (review && review.favorite) ? 'checked' : '' %>>
-            <span class="toggle-slider"></span>
-            <span class="toggle-label">⭐ Favorite</span>
+            <input type="checkbox" name="favorite" id="favorite"
+              <%= (review && review.favorite) ? 'checked' : '' %>>
+            <span class="toggle-track"></span>
+            <span class="toggle-label">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              Add to favorites
+            </span>
           </label>
         </div>
       </div>
@@ -116,7 +143,19 @@
       <div class="form-actions">
         <a href="<%= review ? `/reviews/${review.id}` : '/' %>" class="btn-ghost">Cancel</a>
         <button type="submit" class="btn-primary">
-          <%= review ? '💾 Save Changes' : '+ Add Review' %>
+          <% if (review) { %>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save Changes
+          <% } else { %>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Review
+          <% } %>
         </button>
       </div>
     </form>

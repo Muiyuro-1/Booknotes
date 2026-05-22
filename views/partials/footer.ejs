@@ -1,13 +1,37 @@
   </main>
+
   <footer class="footer">
     <div class="footer-inner">
-      <span class="footer-logo">📖 BookNotes</span>
-      <span class="footer-text">Your personal reading & watching journal</span>
-      <% if (currentUser) { %>
-        <span class="footer-text">Logged in as <strong><%= currentUser.username %></strong></span>
-      <% } %>
+      <a href="/" class="footer-logo">
+        <span class="footer-logo-icon">
+          <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </span>
+        BookNotes
+      </a>
+      <span class="footer-text">Your personal reading &amp; watching journal</span>
+      <div class="footer-links">
+        <% if (currentUser) { %>
+          <a href="/">Journal</a>
+          <a href="/stats">Dashboard</a>
+          <a href="/reviews/new">Add Review</a>
+        <% } else { %>
+          <a href="/auth/login">Sign In</a>
+          <a href="/auth/register">Get Started</a>
+        <% } %>
+      </div>
     </div>
   </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+    <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24">
+      <line x1="12" y1="19" x2="12" y2="5"/>
+      <polyline points="5 12 12 5 19 12"/>
+    </svg>
+  </button>
+
   <script src="/js/main.js"></script>
 </body>
 </html>

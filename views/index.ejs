@@ -1,107 +1,171 @@
 <%- include('partials/header') %>
 
 <% if (currentUser) { %>
+<!-- ── Logged-in Hero ───────────────────────── -->
 <div class="hero">
-  <div class="hero-content">
-    <h1 class="hero-title">Hello, <em><%= currentUser.username %></em> 👋</h1>
-    <p class="hero-sub">Your personal reading & watching journal.</p>
+  <div class="hero-greeting">
+    <div>
+      <h1 class="hero-title">Hello, <em><%= currentUser.username %></em></h1>
+      <p class="hero-sub">Your personal reading &amp; watching journal.</p>
+    </div>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num"><%= stats.total %></span>
+        <span class="stat-label">Total</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num"><%= stats.books %></span>
+        <span class="stat-label">Books</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num"><%= stats.movies %></span>
+        <span class="stat-label">Movies</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num"><%= stats.favorites %></span>
+        <span class="stat-label">Favorites</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num"><%= stats.avg_rating || '—' %></span>
+        <span class="stat-label">Avg</span>
+      </div>
+    </div>
   </div>
-  <div class="stats-bar">
-    <div class="stat">
-      <span class="stat-num"><%= stats.total %></span>
-      <span class="stat-label">Reviews</span>
+
+  <!-- Reading Goal Widget -->
+  <div class="goal-widget goal-not-set" id="goalWidget" data-goal-widget data-completed="<%= stats.books %>">
+    <div class="goal-widget-header">
+      <span class="goal-widget-title">
+        <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <%= new Date().getFullYear() %> Reading Goal
+      </span>
+      <button class="goal-set-btn" data-set-goal>Set goal</button>
     </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num"><%= stats.books %></span>
-      <span class="stat-label">Books</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num"><%= stats.movies %></span>
-      <span class="stat-label">Movies</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num"><%= stats.favorites %></span>
-      <span class="stat-label">Favorites</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num"><%= stats.avg_rating || '—' %></span>
-      <span class="stat-label">Avg Rating</span>
+    <div class="goal-progress-row">
+      <span class="goal-fraction">
+        <span data-goal-num><%= stats.books %></span>
+        <span class="goal-denom" data-goal-denom>books</span>
+      </span>
+      <div class="goal-bar-wrap">
+        <div class="goal-bar" data-goal-bar style="width:0%"></div>
+      </div>
+      <span class="goal-pct" data-goal-pct>0%</span>
     </div>
   </div>
 </div>
+
 <% } else { %>
+<!-- ── Guest Hero ──────────────────────────── -->
 <div class="hero hero-guest">
   <div class="hero-content">
-    <h1 class="hero-title">Track Every <em>Book</em><br>& Movie You Love</h1>
-    <p class="hero-sub">Your personal journal for reviews, ratings and notes.</p>
+    <span class="hero-tagline">
+      <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      Your personal library tracker
+    </span>
+    <h1 class="hero-title">Track Every <em>Book</em><br>&amp; Movie You Love</h1>
+    <p class="hero-sub">Rate, review, and reflect on everything you read and watch. All in one beautiful journal.</p>
     <div class="hero-actions">
-      <a href="/auth/register" class="btn-primary">Start for Free →</a>
+      <a href="/auth/register" class="btn-primary">
+        Start for Free
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
       <a href="/auth/login" class="btn-ghost">Sign In</a>
     </div>
     <div class="hero-trust">
-      <span>✅ Free forever</span>
-      <span>✅ No ads</span>
-      <span>✅ Your data only</span>
+      <span class="trust-item">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Free forever
+      </span>
+      <span class="trust-item">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        No ads
+      </span>
+      <span class="trust-item">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Your data only
+      </span>
     </div>
   </div>
+
   <div class="hero-visual">
     <div class="floating-cards">
       <div class="float-card float-card-1">
-        <span class="fc-icon">📚</span>
+        <div class="fc-thumb book">📚</div>
         <div class="fc-info">
           <span class="fc-title">Atomic Habits</span>
           <span class="fc-meta">James Clear</span>
-          <span class="fc-stars">★★★★★★★★★★</span>
+          <span class="fc-rating">★ 10/10</span>
         </div>
       </div>
       <div class="float-card float-card-2">
-        <span class="fc-icon">🎬</span>
+        <div class="fc-thumb movie">🎬</div>
         <div class="fc-info">
           <span class="fc-title">Inception</span>
           <span class="fc-meta">Christopher Nolan</span>
-          <span class="fc-stars">★★★★★★★★★★</span>
+          <span class="fc-rating">★ 10/10</span>
         </div>
       </div>
       <div class="float-card float-card-3">
-        <span class="fc-icon">📖</span>
+        <div class="fc-thumb book">📖</div>
         <div class="fc-info">
           <span class="fc-title">The Alchemist</span>
           <span class="fc-meta">Paulo Coelho</span>
-          <span class="fc-stars">★★★★★★★★★☆</span>
+          <span class="fc-rating">★ 9/10</span>
         </div>
       </div>
       <div class="float-card float-card-4">
-        <span class="fc-icon">🎥</span>
+        <div class="fc-thumb movie">🎥</div>
         <div class="fc-info">
           <span class="fc-title">Parasite</span>
           <span class="fc-meta">Bong Joon-ho</span>
-          <span class="fc-stars">★★★★★★★★★★</span>
+          <span class="fc-rating">★ 10/10</span>
         </div>
       </div>
-      <div class="hero-badge hero-badge-1">⭐ 10/10</div>
-      <div class="hero-badge hero-badge-2">📊 Dashboard</div>
-      <div class="hero-badge hero-badge-3">🌙 Dark Mode</div>
+      <span class="hero-badge hero-badge-1">★ Top Rated</span>
+      <span class="hero-badge hero-badge-2">Dark Mode</span>
+      <span class="hero-badge hero-badge-3">Dashboard</span>
     </div>
   </div>
 </div>
 <% } %>
 
 <% if (currentUser) { %>
+<!-- ── Controls Bar ─────────────────────────── -->
 <div class="controls-bar">
-  <form class="search-form" method="GET" action="/">
+  <form class="search-form" method="GET" action="/" id="searchForm">
     <input type="hidden" name="filter" value="<%= filter %>">
     <input type="hidden" name="sort" value="<%= sort %>">
     <input type="hidden" name="status" value="<%= status %>">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" name="search"
-        placeholder="Search titles, authors, genres…" value="<%= search %>">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" type="text" name="search" id="searchInput"
+        placeholder="Search titles, authors, genres…" value="<%= search %>" autocomplete="off">
       <% if (search) { %>
-        <a href="/?filter=<%= filter %>&sort=<%= sort %>&status=<%= status %>" class="search-clear">×</a>
+        <a href="/?filter=<%= filter %>&sort=<%= sort %>&status=<%= status %>" class="search-clear" aria-label="Clear search">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </a>
       <% } %>
     </div>
   </form>
@@ -110,50 +174,108 @@
     <a href="/?filter=all&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
       class="filter-btn <%= filter === 'all' ? 'active' : '' %>">All</a>
     <a href="/?filter=book&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
-      class="filter-btn <%= filter === 'book' ? 'active' : '' %>">📚 Books</a>
+      class="filter-btn <%= filter === 'book' ? 'active' : '' %>">
+      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+      Books
+    </a>
     <a href="/?filter=movie&sort=<%= sort %>&search=<%= search %>&status=<%= status %>"
-      class="filter-btn <%= filter === 'movie' ? 'active' : '' %>">🎬 Movies</a>
+      class="filter-btn <%= filter === 'movie' ? 'active' : '' %>">
+      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+        <line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/>
+        <line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/>
+        <line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/>
+        <line x1="17" y1="7" x2="22" y2="7"/>
+      </svg>
+      Movies
+    </a>
   </div>
 
   <div class="filter-group">
     <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=all"
       class="filter-btn <%= status === 'all' ? 'active' : '' %>">All Status</a>
     <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=completed"
-      class="filter-btn <%= status === 'completed' ? 'active' : '' %>">✅ Done</a>
+      class="filter-btn <%= status === 'completed' ? 'active' : '' %>">Done</a>
     <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=in_progress"
-      class="filter-btn <%= status === 'in_progress' ? 'active' : '' %>">⏳ Reading</a>
+      class="filter-btn <%= status === 'in_progress' ? 'active' : '' %>">Reading</a>
     <a href="/?filter=<%= filter %>&sort=<%= sort %>&search=<%= search %>&status=want_to"
-      class="filter-btn <%= status === 'want_to' ? 'active' : '' %>">🔖 Want To</a>
+      class="filter-btn <%= status === 'want_to' ? 'active' : '' %>">Want To</a>
   </div>
 
   <div class="sort-group">
-    <label class="sort-label">Sort:</label>
-    <select class="sort-select"
+    <label class="sort-label" for="sortSelect">Sort:</label>
+    <select class="sort-select" id="sortSelect"
       onchange="window.location.href='/?filter=<%= filter %>&sort='+this.value+'&search=<%= search %>&status=<%= status %>'">
-      <option value="newest"  <%= sort === 'newest'  ? 'selected' : '' %>>Newest</option>
-      <option value="rating"  <%= sort === 'rating'  ? 'selected' : '' %>>Top Rated</option>
-      <option value="title"   <%= sort === 'title'   ? 'selected' : '' %>>A–Z</option>
+      <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
+      <option value="rating" <%= sort === 'rating' ? 'selected' : '' %>>Top Rated</option>
+      <option value="title"  <%= sort === 'title'  ? 'selected' : '' %>>A–Z</option>
     </select>
+  </div>
+
+  <div class="view-toggle" role="group" aria-label="View toggle">
+    <button class="view-btn active" id="viewGrid" title="Grid view" aria-label="Grid view">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </button>
+    <button class="view-btn" id="viewList" title="List view" aria-label="List view">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+    </button>
   </div>
 </div>
 
+<!-- ── Cards ──────────────────────────────── -->
 <% if (reviews.length === 0) { %>
   <div class="empty-state">
-    <div class="empty-icon">📭</div>
-    <h3>Nothing here yet</h3>
-    <p><%= search ? `No results for "${search}"` : 'Add your first book or movie review.' %></p>
-    <a href="/reviews/new" class="btn-primary">+ Add Review</a>
+    <svg class="icon-xl" style="width:52px;height:52px;color:var(--subtle);margin:0 auto 1.25rem;display:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>
+    <h3 class="empty-title">Nothing here yet</h3>
+    <p class="empty-sub"><%= search ? `No results for "${search}"` : 'Add your first book or movie review.' %></p>
+    <a href="/reviews/new" class="btn-primary">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add Review
+    </a>
   </div>
 <% } else { %>
-  <div class="cards-grid">
+  <div class="cards-grid" id="cardsGrid">
     <% reviews.forEach(review => { %>
-      <a href="/reviews/<%= review.id %>" class="card" data-type="<%= review.type %>">
+      <a href="/reviews/<%= review.id %>" class="card" tabindex="0">
         <% if (review.favorite) { %>
-          <span class="card-fav-badge">⭐</span>
+          <span class="card-fav-badge" aria-label="Favorite">
+            <svg style="width:13px;height:13px;stroke:currentColor;fill:currentColor;stroke-width:0" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </span>
         <% } %>
-        <div class="card-type-badge <%= review.type %>">
-          <%= review.type === 'book' ? '📚 Book' : '🎬 Movie' %>
-        </div>
+
+        <span class="card-type-badge <%= review.type %>">
+          <% if (review.type === 'book') { %>
+            <svg style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Book
+          <% } else { %>
+            <svg style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/>
+              <line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>
+            </svg>
+            Movie
+          <% } %>
+        </span>
 
         <% if (review.cover_url) { %>
           <div class="card-cover">
@@ -161,37 +283,51 @@
           </div>
         <% } else { %>
           <div class="card-cover-placeholder">
-            <%= review.type === 'book' ? '📖' : '🎥' %>
+            <% if (review.type === 'book') { %>
+              <svg class="icon-xl" style="width:44px;height:44px;color:var(--border-strong)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            <% } else { %>
+              <svg class="icon-xl" style="width:44px;height:44px;color:var(--border-strong)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/>
+                <line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>
+              </svg>
+            <% } %>
           </div>
         <% } %>
 
         <div class="card-body">
           <h3 class="card-title"><%= review.title %></h3>
-          <p class="card-meta">
-            <% if (review.author_director) { %>
-              <span><%= review.type === 'book' ? 'by' : 'dir.' %> <%= review.author_director %></span>
+          <% if (review.author_director) { %>
+            <p class="card-author"><%= review.type === 'book' ? 'by' : 'dir.' %> <%= review.author_director %></p>
+          <% } %>
+
+          <div class="card-tags">
+            <% if (review.genre) { %><span class="tag tag-genre"><%= review.genre %></span><% } %>
+            <% if (review.status === 'completed') { %>
+              <span class="tag tag-done">Done</span>
+            <% } else if (review.status === 'in_progress') { %>
+              <span class="tag tag-prog">Reading</span>
+            <% } else { %>
+              <span class="tag tag-want">Want To</span>
             <% } %>
             <% if (review.year) { %><span class="card-year"><%= review.year %></span><% } %>
-          </p>
-          <div class="card-tags">
-            <% if (review.genre) { %><span class="card-genre"><%= review.genre %></span><% } %>
-            <span class="card-status status-<%= review.status %>">
-              <%= review.status === 'completed' ? '✅' : review.status === 'in_progress' ? '⏳' : '🔖' %>
-              <%= review.status === 'want_to' ? 'Want To' : review.status === 'in_progress' ? 'In Progress' : 'Done' %>
-            </span>
           </div>
+
           <% if (review.rating) { %>
             <div class="card-rating">
-              <span class="rating-stars">
+              <div class="star-row">
                 <% for(let i = 1; i <= 10; i++) { %>
                   <span class="star <%= i <= review.rating ? 'filled' : '' %>">★</span>
                 <% } %>
-              </span>
-              <span class="rating-num"><%= review.rating %>/10</span>
+              </div>
+              <span class="card-score"><%= review.rating %>/10</span>
             </div>
           <% } %>
+
           <% if (review.review) { %>
-            <p class="card-excerpt"><%= review.review.substring(0, 90) %><%= review.review.length > 90 ? '…' : '' %></p>
+            <p class="card-excerpt"><%= review.review.substring(0, 95) %><%= review.review.length > 95 ? '…' : '' %></p>
           <% } %>
         </div>
       </a>
